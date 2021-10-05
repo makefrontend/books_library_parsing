@@ -18,8 +18,9 @@ with open('filestreem.txt') as books_url:
             response.raise_for_status()
             check_for_redirect(response)
         except:
-            print('Сработал редирект! Книги не найдено!')
+            print(f'Книги c id{index+1} не найдено! Пропускаем!')
             continue
         filename = f'id{index+1}.txt'
         with open(filename, 'wb') as file:
             file.write(response.content)
+print('Парсинг завершен!')
