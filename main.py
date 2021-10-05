@@ -3,13 +3,23 @@ import os
 import requests
 
 
-path = './books'
+def check_for_redirect(response):
+    if response.history:
+        raise requests.HTTPError
+
+
 with open('filestreem.txt') as books_url:
+    path = './books'
     os.makedirs(path, exist_ok=True)
     os.chdir(path)
     for index, book_url in enumerate(books_url):
         response = requests.get(book_url)
-        response.raise_for_status() 
+        try:
+            response.raise_for_status()
+            check_for_redirect(response)
+        except:
+            print('Сработал редирект! Книги не найдено!')
+            continue
         filename = f'id{index+1}.txt'
         with open(filename, 'wb') as file:
             file.write(response.content)
